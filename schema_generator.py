@@ -29,9 +29,9 @@ class Schema:
         for file in self.list_csv_files():
             file_path = self.folder_path + '/' + file
             new_file_path = self.sample_folder + '/' + file.replace('.csv', '_SAMPLE.csv') # Write sample to this path
-            sample_data = pl.read_csv(file_path, n_rows = 10) # Get 1st 10 rows
+            sample_data = pl.read_csv(file_path, n_rows = 10, ignore_errors = True, encoding = 'utf8-lossy') # Get 1st 10 rows
             sample_data.write_csv(new_file_path) 
-            schema = pl.scan_csv(file_path, infer_schema_length = 5000, try_parse_dates = True).schema
+            schema = pl.scan_csv(file_path, infer_schema_length = 5000, try_parse_dates = True, ignore_errors = True, encoding = 'utf8-lossy').schema
             for i in schema.keys():
                 schema[i] = str(schema[i]) # Convert Polars class to string
             schemas[file] = schema # Add to schemas dictionary
